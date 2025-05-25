@@ -2,8 +2,7 @@ import axios from 'axios';
 import { mkConfig, generateCsv, asString } from "export-to-csv";
 import { writeFile } from "node:fs";
 import { Buffer } from 'node:buffer';
-import type { Product } from './productModel.ts';
-import type { ResponseData } from './responseDataModel.ts';
+import type { Product } from '../models/productModel.js';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
@@ -37,8 +36,6 @@ async function fetchProducts() {
     }));
 
     await convertDataToCsv(productList);
-
-
 }
 
 async function convertDataToCsv(productList: Product[]) {
