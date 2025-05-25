@@ -1,0 +1,3 @@
+﻿"id","title","description","price","external_id","main_image","image_urls","link","size","color","stock"
+"1","Camiseta Básica","Camiseta em algodão de alta qualidade",79.9,"SKU123","https://example.com/image1.jpg","https://example.com/image1.jpg|https://example.com/image1_alt.jpg","https://example.com/product1","P","Preto",10
+"2","Camiseta Básica","Camiseta em algodão de alta qualidade",79.9,"SKU123","https://example.com/image1.jpg","https://example.com/image1.jpg|https://example.com/image1_alt.jpg","https://example.com/product1","M","Preto",15
