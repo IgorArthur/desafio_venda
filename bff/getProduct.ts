@@ -3,6 +3,7 @@ import { mkConfig, generateCsv, asString } from "export-to-csv";
 import { writeFile } from "node:fs";
 import { Buffer } from 'node:buffer';
 import type { Product } from '../models/productModel.js';
+import type { ResponseData } from '../models/responseDataModel.js';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
@@ -20,20 +21,39 @@ const argv = yargs(hideBin(process.argv))
     .argv;
 
 async function fetchProducts() {
+    let productList: Product[] = [];
+    let currentPage = 1;
+    let totalPages = Number.MAX_SAFE_INTEGER;
 
-    const response = await axios.get('http://localhost:3000/api/products', {
-        auth: { username: argv.user, password: argv.pass },
-        validateStatus: () => true,
-    });
+    while (currentPage <= totalPages) {
+        const response = await axios.get<ResponseData>('http://localhost:3000/api/products', {
+            auth: { username: argv.user, password: argv.pass },
+            validateStatus: () => true,
+            params: {
+                page: currentPage,
+                pageSize: 2
+            }
+        });
 
-    if (response.status !== 200) { console.log("\nAn error ocurred:\n", response.data.error); return; }
+        if (response.status !== 200) { 
+            console.log("\nAn error occurred:\n", response.data.error); 
+            return; 
+        }
 
-    const productList = response.data.productList.map((product: Product) => ({
-        ...product,
-        image_urls: Array.isArray(product.image_urls)
-            ? product.image_urls.join("|")
-            : product.image_urls,
-    }));
+        const { productList: currentPageProducts, pagination } = response.data;
+        totalPages = pagination.totalPages;
+
+        const parsedProducts = currentPageProducts.map((product: Product) => ({
+            ...product,
+            image_urls: Array.isArray(product.image_urls)
+                ? product.image_urls.join("|")
+                : product.image_urls,
+        }));
+
+        productList = [...productList, ...parsedProducts];
+        console.log(`Fetched page ${currentPage} of ${totalPages}`);
+        currentPage++;
+    }
 
     await convertDataToCsv(productList);
 }
@@ -45,7 +65,7 @@ async function convertDataToCsv(productList: Product[]) {
     const csvBuffer = new Uint8Array(Buffer.from(asString(csv)));
 
     writeFile(filename, csvBuffer, (err) => {
-        if (err) console.log("\nAn error ocurred:\n", err);
+        if (err) console.log("\nAn error occurred:\n", err);
         console.log("\nFile saved:\n", filename);
     });
 }

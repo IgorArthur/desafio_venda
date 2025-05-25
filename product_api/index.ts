@@ -6,7 +6,23 @@ const app = express();
 const port = 3000;
 
 app.get('/api/products', authMiddleware, (req: Request, res: Response) => {
-    res.json({ productList });
+    const page = parseInt(req.query.page as string) || 1;
+    const pageSize = parseInt(req.query.pageSize as string) || 2;
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, productList.length);
+    const totalPages = Math.ceil(productList.length / pageSize);
+    
+    const paginatedProducts = productList.slice(startIndex, endIndex);
+    
+    res.json({
+        productList: paginatedProducts,
+        pagination: {
+            currentPage: page,
+            pageSize,
+            totalPages,
+            totalItems: productList.length
+        }
+    });
 });
 
 app.listen(port, () => {
