@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
+import { users } from './users.js';
 
 
 interface AuthRequest extends Request {
@@ -23,9 +24,11 @@ const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction): vo
             return;
         }
 
+        const user = users.find(user => user.username === username && user.password === password);
+
         req.auth = { username, password };
 
-        if (username === 'admin' && password === 'admin123') {
+        if (user) {
             next();
         } else {
             res.status(401).json({ error: 'Unauthorized: Invalid credentials' });

@@ -1,3 +1,4 @@
+import { users } from './users.js';
 const authMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Basic ')) {
@@ -12,8 +13,9 @@ const authMiddleware = (req, res, next) => {
             res.status(401).json({ error: 'Invalid credentials format' });
             return;
         }
+        const user = users.find(user => user.username === username && user.password === password);
         req.auth = { username, password };
-        if (username === 'admin' && password === 'admin123') {
+        if (user) {
             next();
         }
         else {
