@@ -14,25 +14,37 @@ git clone https://github.com/IgorArthur/desafio_venda.git
 cd desafio_venda
 ```
 
-2. Install the dependencies:
-```bash
-npm install
-```
-
-3. Run the ProductApi:
+2. Open ProductApi:
 ```bash
 cd product_api
+```
+
+2.1. Install the dependencies for ProductApi:
+```bash
+npm install
 npm run build
+```
+
+2.2. Run ProductAApi
+```bash
 npm start
 ```
 Expected output: 
  - Server is running on http://localhost:3000
 
-4.1. Open a new terminal
-
-4.2. Run BFF:
+3. Open BFF on a new terminal
 ```bash
+cd desafio_venda
 cd bff
+```
+
+3.1. Install the dependencies for ProductApi:
+```bash
+npm install
+```
+
+3.2. Run BFF:
+```bash
 node getProduct.ts --user=admin --pass=admin123
 ```
 Expected output: 
@@ -42,3 +54,5 @@ Expected output:
 
    - File saved:
  products.csv
+
+A file called products.csv should be created inside desafio_venda/bff
