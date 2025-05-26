@@ -10,7 +10,7 @@ two systems:
 
 1. Clone the Repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/IgorArthur/desafio_venda.git
 cd desafio_venda
 ```
 
